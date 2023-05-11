@@ -1,7 +1,671 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Project 3-1 here
-	</body>
-</html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Project 3-1: Pathtracer</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="9ed4f674-8a8a-4ea8-95d8-1d652823ebdd" class="page sans"><header><h1 class="page-title">Project 3-1: Pathtracer</h1></header><div class="page-body"><p id="c3499bb6-47bf-43b3-a086-a504043fdb77" class="">by Christina Neumann, CS 184 Spring 2023</p><h3 id="c7f7ea2e-9986-40ef-8f38-1b10c10f2c66" class=""><strong>Overview</strong></h3><p id="64f26f22-5df5-49f9-a798-b7e1fa904b38" class="">In this project, I used raytracing to simulate the different effects of lighting on the environment. First, I implemented ray generation based on where the camera was in the scene, and then took care of the various types of intersections that I would need, including triangle and sphere intersections. After that, I implemented a Bounding Volume Hierarchy algorithm to significantly speed up the calculations. Because we are sometimes doing millions of tests, pruning the amount of intersection tests we’re doing significantly improved performance. </p><p id="1307b510-9f4e-4658-854f-68849108fb2c" class="">After I got the basic mechanics of the rays implemented, then I went on to use various sampling techniques to simulate how light falls in the scene. I used uniform hemispheric sampling and importance sampling, and the two of these allowed me to simulate both direct and indirect lighting.</p><p id="b0259a3b-1c79-4a47-a783-48908d45b321" class="">This project was challenging to debug because so much of it depended on the previous steps, and small mistakes could rear their heads much later on. Because I did this project with such a gap in between the beginning and the end, it was really challenging to debug earlier parts of the project that were completed long before, such as problems with the BVH intersections and the triangle intersections. </p><p id="b9d5fbde-1bbf-4339-905d-69c628b78a5b" class="">Note that parts 1, 2, and some of part 3 of the project were completed much earlier than parts 4 and 5, and as a result the progress images for parts 1 and 2 are lacking and were overwritten by progress on later parts. </p><h3 id="862458c2-7239-48a9-88dc-1bac5f9fe558" class=""><strong>Part 1: Ray Generation and Scene Intersection</strong></h3><p id="7d5900a5-2b76-4b28-921a-1f6577c3492f" class="">To generate a ray in Camera::generate_ray(), I first found the image’s normalized top right and bottom left corners, then converted to camera space. After converting to camera space, I found the point where the ray should be intersecting the perspective of the camera in the camera space. Now that I had the point where the ray will intersect the image plane, I converted it to world space using the camera-to-world transformation matrix and normalized it to get the final direction of the ray. A ray needs an origin and direction, but the origin of the ray is just the position of the camera, so now I can just generate the ray directly with the information I calculated thus far.</p><p id="fc905081-e2e3-4ebe-bb5b-00112acd3686" class="">To raytrace a pixel in <code>Pathtracer::raytrace_pixel()</code>, I simply called <code>generate_ray()</code> ns_aa times and used a Monte Carlo Estimate to determine the final value of the pixel. The Monte Carlo Estimate is essentially just finding the average of all the samples we took from the pixel.</p><p id="ca1f65ec-bba6-4f9f-8c5b-09d1b1c9b317" class="">For triangle intersection in Triangle::intersect(), I first used the Moller-Trumbore algorithm to generate the time t and the barycentric coordinates of the triangle on the 3D plane to determine whether or not an intersection occurred. Intersection occurs if the barycentric coordinates sum to less than one and t is within the minimum and maximum t allowed by our generated ray. The Moller-Trumbore algorithm essentially works the same way as barycentric coordinates do, checking our ray to see if it intersects the plane, and if so, if it is within our triangle via our barycentric coordinates at time t.</p><figure id="139a5e7c-c626-4856-9896-6f79a2f4c1b2" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/task1.4.png"><img style="width:800px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/task1.4.png"/></a><figcaption>The image rendered after completing Task 1-4: Sphere Intersection</figcaption></figure><h3 id="51b7df05-655f-4a7c-8759-f0aba33c6558" class=""><strong>Part 2: Bounding Volume Hierarchy</strong></h3><p id="3076593c-a3f8-4328-9f47-56a881de07b7" class="">For my BVH construction algorithm, I first take care of my base case, which is to check if the number of primitives is within the maximum allowed for a leaf, in which case I update the iterators to be the start and end passed into the function. Otherwise, to get the recursive step, I partition my function into two groups, split on the center of the longest axis. I chose this heuristic for the splitting point because it was the easiest way to keep my code from becoming overly complicated and seemed to serve the purpose nicely, even if it wasn’t the fastest one necessarily available. In order to prevent a situation where all of my bounding boxes are on one side of the longest axis, if my partition point is set to be the start or the end of the sorted set, I know that I’ve been given one empty set and one full set, so I instead just split the set directly down the middle and recurse on the two halves that result.</p><p id="acc2fabf-8699-4d62-af02-90db899a72a7" class="">The results of stepping through the BVH of the cow are as follows:</p><div id="b2e25579-632e-4149-a7f9-ab9dfea08030" class="column-list"><div id="8f82e8b6-2958-470d-98c0-f87dbac79a39" style="width:50%" class="column"><figure id="868e5f85-7f64-434f-bb68-e4667c2483b1" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.03_AM.png"><img style="width:1590px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.03_AM.png"/></a><figcaption>Starting step</figcaption></figure></div><div id="a3591dcd-d1a3-4357-a158-b569badd9d87" style="width:50%" class="column"><figure id="169b13f5-d701-4dc9-bdfe-5ee2880acb0c" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.21_AM.png"><img style="width:1584px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.21_AM.png"/></a><figcaption>First step</figcaption></figure></div></div><div id="992d2a3a-2f30-41c1-931b-2183d3e79858" class="column-list"><div id="71a2409d-d808-413e-83a3-a7ba7e270bca" style="width:50%" class="column"><figure id="314ef33b-05af-4ce1-9dfb-f3549d6f8a92" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.28_AM.png"><img style="width:1578px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.28_AM.png"/></a><figcaption>Second step</figcaption></figure></div><div id="bc036d59-2121-4e75-9361-271c13f448ee" style="width:50%" class="column"><figure id="8dd3f822-5ed1-4bde-9153-1d909d6fd8d7" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.36_AM.png"><img style="width:1588px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.36_AM.png"/></a><figcaption>Third step</figcaption></figure></div></div><div id="97699303-0b12-444d-a25a-1fdb69dfbfe6" class="column-list"><div id="5c5ab314-c7d5-4a7c-8b96-a3089a460fcf" style="width:50%" class="column"><figure id="32e86394-106b-42a4-b880-a6d45fb5c66d" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.44_AM.png"><img style="width:1588px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.44_AM.png"/></a><figcaption>4th step</figcaption></figure></div><div id="c84ad7b9-afd4-4cff-af09-0454da418ed9" style="width:50%" class="column"><figure id="2b13049e-cd32-4c34-9c84-df773d38c9ee" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.57_AM.png"><img style="width:1588px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/Screen_Shot_2023-05-11_at_1.05.57_AM.png"/></a><figcaption>The tippy toes of the cow after approx. 8 steps</figcaption></figure></div></div><p id="d6546a2c-0b29-4a3e-8301-962c56d9813e" class="">Before implementing BVH acceleration, rendering a small image like cow.dae took around 20 seconds to complete, and CBlucy.dae took 170 seconds to complete. With BVH acceleration, both renders are completed almost instantly, in under a second.</p><figure id="05a11999-6d45-4eac-89ff-5a1ecbc18542" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBlucy.png"><img style="width:800px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBlucy.png"/></a><figcaption>CBLucy.dae, this image has a lot of intersections so it took 170 seconds to complete before speedups. BVH acceleration let us render the image in under a second.</figcaption></figure><p id="80fc88f1-3d62-4b66-8c84-6abc0cc00dff" class="">BVH Acceleration significantly increases the speed of the renders. Like many other pruning algorithms, BVH lets us quickly discard paths we don’t need to take. When we are tracing millions of rays, this makes a <em>huge</em> difference very quickly.</p><h3 id="336d7785-7dad-4005-a7e4-8b38a3903372" class=""><strong>Part 3: Direct Illumination</strong></h3><p id="5a52d899-c941-455d-89f1-c31ee6f7bd1b" class="">For the direct lighting function, there were two types of sampling used to estimate the lighting, uniform hemisphere sampling and importance sampling. Uniform hemisphere sampling is estimating the amount of light at a point by sampling incoming rays uniformly in random directions, whereas importance sampling samples from the sampling of the lights directly.</p><p id="46a47244-e055-4f5e-a829-b51631955cd7" class="">To implement uniform hemisphere sampling, I used a Monte Carlo estimator to average out the samples taken. With each sample, I generated the reflection equation to determine the amount of direct lighting that point received. The reflection equation to calculate outgoing light consists of the radiance of the light source multiplied by the BSDF and the cosine of the angle between the ray and the light source, and then divided by the PDF. The PDF in this case is <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.2/katex.min.css')</style><span data-token-index="0" contenteditable="false" class="notion-text-equation-token" style="user-select:all;-webkit-user-select:all;-moz-user-select:all"><span></span><span><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi mathvariant="normal">/</mi><mn>2</mn><mi>p</mi><mi>i</mi></mrow><annotation encoding="application/x-tex">1/2pi</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/2</span><span class="mord mathnormal">p</span><span class="mord mathnormal">i</span></span></span></span></span><span>﻿</span></span>.</p><p id="7c1dbd01-c455-4aed-8f94-63da6985df51" class="">To implement importance sampling, first I iterated through all of the lights in the scene. If the light was a point light source, we just sampled once. Otherwise, we sampled many times over the light by calling <code>sample_L</code>, which also provides for us the PDF, emitted radiance, the direction of the sample in world space, and the distance between the point and the light source. We also use these in a very similar manner as to the uniform hemisphere sampling, calculating the reflection equation with the BSDF, <code>sample_L</code>’s provided emitted light, and the PDF. </p><p id="550a3d55-8161-4d20-afcc-8d1c38ca10a9" class="">Here is a bunny rendered with uniform hemisphere sampling:</p><div id="a8c2e1e2-08ee-4c32-b20d-7f22aa9db86b" class="column-list"><div id="172c9821-8236-45e1-9d36-fd839323a8af" style="width:50%" class="column"><figure id="0eab56da-c6fe-4b06-8c85-f514913a6fa7" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBbunny_H_16_8.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBbunny_H_16_8.png"/></a><figcaption>Bunny.dae with uniform hemisphere sampling, 16 rays per pixel, 8 samples per area light</figcaption></figure></div><div id="5d81dc60-1c22-4fdc-a96a-e5f499362fd3" style="width:50%" class="column"><figure id="ffa99c0e-4cfe-4b89-8fee-b3ed9e9c1da4" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBbunny_H_64_32.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/CBbunny_H_64_32.png"/></a><figcaption>Bunny.dae with uniform hemisphere sampling, 64 rays per pixel, 32 samples per area light</figcaption></figure></div></div><p id="d7afbd7a-01b6-4cb7-ac5a-bb11eb5aa40e" class="">Here is the same bunny, now rendered with importance sampling.</p><div id="8e132ef9-01e7-4f7f-9bcb-3567ac54931d" class="column-list"><div id="d2f8b30c-f6a0-4e12-a54f-41a2a0392194" style="width:50%" class="column"><figure id="32ea13ad-98ec-4e7b-a4b2-24bd332b079c" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1_1.png"/></a><figcaption>Bunny.dae with importance sampling, 1 ray per pixel and 1 sample per area.</figcaption></figure></div><div id="c7c3db05-8fc3-4b60-8ce8-1efef00e72ad" style="width:50%" class="column"><figure id="0bea777a-ebb1-47b5-a524-c9d4afa40f74" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_64_32.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_64_32.png"/></a><figcaption>Bunny.dae with importance sampling, 64 rays per pixel and 34 samples per area</figcaption></figure></div></div><p id="466feddf-4a7d-41a2-81b3-16505147a691" class="">By changing the amount of light rays per pixel, we can affect the noise level. The following images are a comparison of importance light sampling using varying amounts of light rays per pixel, with a constant one sample per pixel. As the number of light rays per pixel increases, the noise level decreases and the shadows become softer and more diffused.</p><div id="855bfa51-3ac9-47e2-9d7b-a6e4fc1c2bf0" class="column-list"><div id="94f66d9b-00f7-4efd-8132-c439a906a3af" style="width:50%" class="column"><figure id="1ea92599-e0fb-4033-a7ed-f0b61dda4021" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_1_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_1_1.png"/></a><figcaption>1 light ray per pixel</figcaption></figure></div><div id="c99bd385-e4a8-4f31-ac67-670873cb70ec" style="width:50%" class="column"><figure id="9e77675a-0606-41de-a737-467741d88a20" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_4_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_4_1.png"/></a><figcaption>4 light rays per pixel</figcaption></figure></div></div><div id="8f4d5a64-ecaa-4f1d-92fe-57fe5856c249" class="column-list"><div id="fbcd11ce-175e-49a5-91e5-1a25108f6745" style="width:50%" class="column"><figure id="025f6008-4538-42db-adb4-3623e86da8d3" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_16_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_16_1.png"/></a><figcaption>16 light rays per pixel</figcaption></figure></div><div id="c7a854cb-d706-4be3-a6a5-052d02f0fd42" style="width:50%" class="column"><figure id="6492b152-d46a-4621-926a-f434f13e5220" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_64_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/dragon_64_1.png"/></a><figcaption>64 light rays per pixel</figcaption></figure></div></div><p id="3cd8216d-2658-41fb-a615-e42a3437924b" class="">Uniform hemisphere sampling provides a more varied result. The noise level is higher and more inconsistent and the shadows are more jagged, while the importance sampling provides a softer and more clear image. The uniform hemispheric sampling samples random directions, so sometimes it doesn’t sample actual light rays, whereas when a sample is taken with importance sampling, we are always sampling from a light. This results in a much smoother and clearer image.</p><h3 id="c913f4b4-c237-4a8f-abab-d36e92167003" class=""><strong>Part 4: Global Illumination</strong></h3><figure id="1f11afab-9b6e-4d69-9094-f65375ba378a" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1024.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1024.png"/></a><figcaption>CBSpheres_lambertian.dae with global illumination, 1024 samples per pixel, ray depth = 5</figcaption></figure><p id="4607d5f9-981a-4711-b641-3488521dcb54" class="">For the indirect lighting function, the mechanics of the actual ray tracing are very similar as the previous steps. We measure the irradiance of the light ray after its interaction with the material. However, this time we recursively follow the rays as they “bounce” from our hit point in order to get the indirect lighting. This allows us to see some of the color in the environment to change the color of the light and get some really nice visual effects.</p><p id="f8d4bf17-38be-4499-a1b1-24c7f5bcb6ce" class="">As before, we sample a random direction from the BSDF of the surface that the ray is intersecting. In order to decide whether or not to continue following that ray, we check that we haven’t reached the maximum ray depth (or, number of bounces) and we flip a weighted coin to decide whether or not to continue. This weighted coin is the Russian Roulette decider which helps keep us from infinitely recursing. Then, we generate our next ray and call our function recursively until we’ve either hit maximum ray depth or terminated via Russian Roulette.</p><figure id="1e9a25dd-5596-4c49-abcb-e9d91ceeef6a" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024.png"/></a><figcaption>CBbunny.dae with global illumination, 1024 samples per pixel, ray depth = 5</figcaption></figure><div id="6ac7cdd5-192e-4b37-87e3-c8331ccaab53" class="column-list"><div id="475cae77-e25f-42fd-a1a1-86a4d1f6eb41" style="width:50%" class="column"><figure id="b3d72d5e-93c6-49f8-9d34-89f63beec8e4" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_direct.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_direct.png"/></a><figcaption>CBbunny.dae with only direct illumination, 1024 samples per pixel</figcaption></figure></div><div id="aec08d6a-be7d-4499-a154-2725de88d1ff" style="width:50%" class="column"><figure id="a4cff811-9556-4b73-a9af-6abc46c61f3b" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_indirect.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_indirect.png"/></a><figcaption>CBbunny.dae with only indirect illumination, 1024 samples per pixel, ray depth = 5</figcaption></figure></div></div><p id="d03a88ca-a70d-43c7-854d-84a32cdb64c1" class="">As you can see above, the global illumination combines the diffused light and the direct light to provide more soft shading and allows color to be reflected in the bunny. Next, we will take a look at how the maximum ray depth, or the number of times the ray is allowed to bounce, effects the illumination of the bunny. The following images have all other parameters other than ray depth held constant, sampling at 1024 rays per pixel.</p><div id="9392af03-0d02-446c-b244-6c3ad4ec0054" class="column-list"><div id="66f06488-78ca-4b65-8949-4ccb167572ea" style="width:50%" class="column"><figure id="fd7d545d-f382-4728-9509-abf8e2097a86" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_0.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_0.png"/></a><figcaption>Depth = 0</figcaption></figure><figure id="5b13438a-41ee-479e-b22a-b4bd7e59e844" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_2.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_2.png"/></a><figcaption>Depth = 2</figcaption></figure></div><div id="51b2daee-6856-475c-9ee3-487149347a62" style="width:50%" class="column"><figure id="b2f9aee1-4e56-471e-9a67-2b7ce465dcd1" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_1.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_1.png"/></a><figcaption>Depth = 1</figcaption></figure><figure id="9b87e812-6d6c-42f3-93db-e662a242b75d" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_3.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_3.png"/></a><figcaption>Depth = 3</figcaption></figure></div></div><figure id="9061659e-014a-4391-9096-51897b010d3d" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_100.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/bunny_1024_100.png"/></a><figcaption>Depth = 100</figcaption></figure><p id="df7d5868-6ea2-464e-aaf2-698bfced7a47" class="">
+</p><ul id="e414aebb-95e0-4071-bfe0-9910f5bd4945" class="bulleted-list"><li style="list-style-type:disc">Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.</li></ul><p id="68b7c5f9-dc54-4d9b-a4ac-43dfb5263d37" class="">The sampling rate effects the noisiness of the renders. We can see this by holding all other parameters constant and gradually increasing the number of samples per pixel. In this, we are using 4 light rays per pixel with a maximum depth of 5. </p><div id="a3bb1089-c393-40f1-9990-92dd8bf6738e" class="column-list"><div id="96292243-fdc5-4d19-845c-e41640c8bafe" style="width:50%" class="column"><figure id="034da494-8c3f-4393-8dd8-7c0a593c1d8c" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1_4.png"/></a><figcaption>sample = 1</figcaption></figure></div><div id="880a07a1-22ca-45c5-b045-56aee57b292a" style="width:50%" class="column"><figure id="e84eb442-8ce6-4de6-9b73-44345e9e37f8" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_2_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_2_4.png"/></a><figcaption>sample = 2</figcaption></figure></div></div><div id="50a78014-3399-418b-bc6d-b18970d821d4" class="column-list"><div id="1685b206-2488-4d85-8419-8d9d55015159" style="width:50%" class="column"><figure id="93afb439-7da3-4439-8008-f9d542fc4711" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_4_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_4_4.png"/></a><figcaption>sample = 4</figcaption></figure></div><div id="e4c41f1f-85eb-4f25-a90d-a9cf8bcec6db" style="width:50%" class="column"><figure id="019b0154-a0e9-43b2-9365-a1500515b887" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_8_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_8_4.png"/></a><figcaption>sample = 8</figcaption></figure></div></div><div id="bc7a0474-0bb4-45e1-a2f1-a8c4c1a1d8bf" class="column-list"><div id="89d6aa06-d74e-44b8-a576-6826f670dc10" style="width:50%" class="column"><figure id="9587fb9e-a80f-41a5-b7b1-19840ed4fcb1" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_16_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_16_4.png"/></a><figcaption>sample = 16</figcaption></figure></div><div id="e5e5862b-fb32-470b-b6ae-9bf83cc31fb7" style="width:50%" class="column"><figure id="687aed7b-e5cc-4b5b-aaa3-1c2b13265dae" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_64_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_64_4.png"/></a><figcaption>sample = 64</figcaption></figure></div></div><figure id="fe46c817-d1b9-4448-a806-a984c2c831e5" class="image"><a href="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1024_4.png"><img style="width:480px" src="Project%203-1%20Pathtracer%209ed4f6748a8a4ea895d81d652823ebdd/spheres_1024_4.png"/></a><figcaption>sample = 1024</figcaption></figure><h3 id="a193af40-91e2-472f-ba5a-d5a71eb14206" class=""><strong>Part 5: Adaptive Sampling</strong></h3><p id="64bd0059-208f-4cd9-96fb-d5d8f9fc05be" class="">Adaptive sampling helps us to reduce the amount of noise in our rendered images by changing the sampling rate depending on of the pixel has converged. This allows us to not have a high to use a high number of samples for <em><em><em><em><em>every</em></em></em></em></em> pixel, just the ones that need the extra samples. </p><p id="7fd0c8ae-d3af-413d-b6fe-6a42bfc28c67" class="">I ran out of time, so part 5 was not implemented.</p><p id="f5bdef5e-17ac-4728-8272-215a7e1c484e" class="">
+</p></div></article></body></html>
